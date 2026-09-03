@@ -1,19 +1,11 @@
-import pg from "pg";
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "./generated/prisma/client";
 
-const { Pool } = pg;
-
-export const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "child_development_planner",
-  password: "postgres",
-  port: 5432,
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
 });
 
-pool.query("SELECT NOW()")
-  .then(() => {
-    console.log("PostgreSQL connected");
-  })
-  .catch((error) => {
-    console.error("PostgreSQL connection error:", error);
+export const prisma = new PrismaClient({
+  adapter,
 });

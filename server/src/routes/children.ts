@@ -1,22 +1,17 @@
 import { Router } from "express";
-import { pool } from "../db";
+import { prisma } from "../db";
 
 const router = Router();
 
-// Получить всех детей
 router.get("/", async (_req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT
-        id,
-        name,
-        age,
-        selected_skills AS "selectedSkills"
-      FROM children
-      ORDER BY id`,
-    );
+    const children = await prisma.child.findMany({
+      orderBy: {
+        id: "asc",
+      },
+    });
 
-    res.json(result.rows);
+    res.json(children);
   } catch (error) {
     console.error("Ошибка получения детей:", error);
 
@@ -26,29 +21,23 @@ router.get("/", async (_req, res) => {
   }
 });
 
-// Получить ребёнка по ID
 router.get("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = Number(req.params.id);
 
-    const result = await pool.query(
-      `SELECT
+    const child = await prisma.child.findUnique({
+      where: {
         id,
-        name,
-        age,
-        selected_skills AS "selectedSkills"
-      FROM children
-      WHERE id = $1`,
-      [id],
-    );
+      },
+    });
 
-    if (result.rows.length === 0) {
+    if (!child) {
       return res.status(404).json({
         error: "Ребёнок не найден",
       });
     }
 
-    res.json(result.rows[0]);
+    res.json(child);
   } catch (error) {
     console.error("Ошибка получения ребёнка:", error);
 
@@ -58,23 +47,19 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Создать ребёнка
 router.post("/", async (req, res) => {
   try {
     const { name, age, selectedSkills } = req.body;
 
-    const result = await pool.query(
-      `INSERT INTO children (name, age, selected_skills)
-       VALUES ($1, $2, $3)
-       RETURNING
-         id,
-         name,
-         age,
-         selected_skills AS "selectedSkills"`,
-      [name, age, selectedSkills],
-    );
+    const child = await prisma.child.create({
+      data: {
+        name,
+        age,
+        selectedSkills,
+      },
+    });
 
-    res.status(201).json(result.rows[0]);
+    res.status(201).json(child);
   } catch (error) {
     console.error("Ошибка создания ребёнка:", error);
 
@@ -84,31 +69,21 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Обновить выбранные навыки ребёнка
 router.put("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = Number(req.params.id);
     const { selectedSkills } = req.body;
 
-    const result = await pool.query(
-      `UPDATE children
-       SET selected_skills = $1
-       WHERE id = $2
-       RETURNING
-         id,
-         name,
-         age,
-         selected_skills AS "selectedSkills"`,
-      [selectedSkills, id],
-    );
+    const child = await prisma.child.update({
+      where: {
+        id,
+      },
+      data: {
+        selectedSkills,
+      },
+    });
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        error: "Ребёнок не найден",
-      });
-    }
-
-    res.json(result.rows[0]);
+    res.json(child);
   } catch (error) {
     console.error("Ошибка обновления ребёнка:", error);
 

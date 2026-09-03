@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { pool } from "./db";
 import skillsRouter from "./routes/skills";
 import exercisesRouter from "./routes/exercises";
 import childrenRouter from "./routes/children";
@@ -8,15 +7,6 @@ import childrenRouter from "./routes/children";
 const app = express();
 
 const PORT = 3000;
-
-interface Child {
-  id: number;
-  name: string;
-  age: string;
-  selectedSkills: number[];
-}
-
-const children: Child[] = [];
 
 app.use(cors());
 app.use(express.json());

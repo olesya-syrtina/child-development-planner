@@ -1,21 +1,17 @@
 import { Router } from "express";
-import { pool } from "../db";
+import { prisma } from "../db";
 
 const router = Router();
 
 router.get("/", async (_req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT
-        id,
-        skill_id AS "skillId",
-        title,
-        description
-      FROM exercises
-      ORDER BY id`,
-    );
+    const exercises = await prisma.exercise.findMany({
+      orderBy: {
+        id: "asc",
+      },
+    });
 
-    res.json(result.rows);
+    res.json(exercises);
   } catch (error) {
     console.error("Ошибка получения упражнений:", error);
 

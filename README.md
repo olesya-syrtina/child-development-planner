@@ -9,24 +9,118 @@
 ## MVP
 
 создание профиля ребёнка;
-указание возраста ребёнка;
+
 отображение навыков, соответствующих возрасту;
+
 разделение навыков по категориям развития;
+
 отметку освоенных навыков;
-формирование индивидуального плана занятий;
-отображение упражнений для выбранных навыков.
+
+формирование индивидуального плана занятий.
 
 # Технологии
-Frontend
+
+## Frontend
+
 Vue 3
+
 TypeScript
 
-Backend
+Vite
+
+Bootstrap
+
+## Backend
+
 Node.js
 
-Database
+Express
+
+## Database
+
 PostgreSQL
 
-## Запуск
+Prisma ORM
 
-...npm run dev...
+## Test
+
+Vitest
+
+# Запуск
+
+1. Клонировать репозиторий
+
+```bash
+git clone https://github.com/olesya-syrtina/child-development-planner.git
+cd child-development-planner
+```
+
+2. Установить зависимости
+
+Frontend
+
+```bash
+cd client
+npm install
+```
+
+Backend
+
+```bash
+cd ../server
+npm install
+```
+
+3. Настроить PostgreSQL
+
+База данных:
+
+```text
+child_development_planner
+```
+
+Настроить переменную окружения:
+
+В папке server создать файл .env
+
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/child_development_planner"
+```
+
+4. После настройки базы данных Prisma Client должен быть сгенерирован командой:
+
+```bash
+cd server
+npx prisma generate
+```
+
+5. Запуск из корня проекта
+
+```bash
+npm run dev
+```
+
+Команда одновременно запускает frontend и backend.
+
+# ESLint и Prettier
+
+Команда для проверки:
+
+```bash
+cd client
+npm run lint
+```
+
+Форматирование кода:
+
+```bash
+cd client
+npm run format
+```
+
+# Test
+
+```bash
+cd client
+npm test
+```
