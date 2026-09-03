@@ -38,9 +38,7 @@ if (childId) {
 }
 
 const ageSkills = computed(() => {
-  return skills.value.filter(
-    (skill) => skill.ageGroup === childAge,
-  );
+  return skills.value.filter((skill) => skill.ageGroup === childAge);
 });
 
 const categories = computed(() => {
@@ -49,9 +47,7 @@ const categories = computed(() => {
 
 const toggleSkill = (skillId: number) => {
   if (selectedSkills.value.includes(skillId)) {
-    selectedSkills.value = selectedSkills.value.filter(
-      (id) => id !== skillId,
-    );
+    selectedSkills.value = selectedSkills.value.filter((id) => id !== skillId);
   } else {
     selectedSkills.value.push(skillId);
   }
@@ -106,83 +102,89 @@ const goBack = () => {
 fetch("http://localhost:3000/api/skills")
   .then((response) => response.json())
   .then((data) => {
-
     skills.value = data;
   })
   .catch((error) => {
     console.error("Ошибка загрузки навыков:", error);
   });
-
 </script>
 
 <template>
   <main class="skills-page">
-    <h1>Навыки ребёнка</h1>
+    <div class="container py-5">
+      <h1>Навыки ребёнка</h1>
 
-    <p class="skills-page__info">
-      {{ childName }}, {{ childAge }}
-    </p>
-    <section class="skills-list">
-      <div
-        v-for="category in categories"
-        :key="category"
-        class="skills-category"
-      >
-        <h2>{{ category }}</h2>
+      <p class="skills-page__info">
+        {{ childName }}, {{ childAge }}
+      </p>
 
-        <label
-          v-for="skill in ageSkills.filter(
-            (skill) => skill.category === category,
-          )"
-          :key="skill.id"
-          class="skill"
-          :class="{ selected: selectedSkills.includes(skill.id) }"
+      <section class="skills-list">
+        <div
+          v-for="category in categories"
+          :key="category"
+          class="skills-category"
         >
-          <input
-            type="checkbox"
-            :checked="selectedSkills.includes(skill.id)"
-            @change="toggleSkill(skill.id)"
-          />
+          <h2>{{ category }}</h2>
 
-          <span>{{ skill.title }}</span>
-        </label>
+          <label
+            v-for="skill in ageSkills.filter(
+              (skill) => skill.category === category,
+            )"
+            :key="skill.id"
+            class="skill"
+            :class="{ selected: selectedSkills.includes(skill.id) }"
+          >
+            <input
+              type="checkbox"
+              class="form-check-input"
+              :checked="selectedSkills.includes(skill.id)"
+              @change="toggleSkill(skill.id)"
+            >
+
+            <span>{{ skill.title }}</span>
+          </label>
+        </div>
+      </section>
+
+      <div class="buttons">
+        <button
+          type="button"
+          class="btn btn-outline-warning"
+          @click="goBack"
+        >
+          ← Назад
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-warning"
+          @click="createPlan"
+        >
+          Составить план занятий
+        </button>
       </div>
-    </section>
-
-    <div class="buttons">
-      <button
-        type="button"
-        @click="goBack"
-      >
-        ← Назад
-      </button>
-
-      <button
-        type="button"
-        @click="createPlan"
-      >
-        Составить план занятий
-      </button>
     </div>
   </main>
 </template>
 
-
 <style scoped>
-
-P {
-  text-align: center;
+.skills-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff7d6, #ffe0a3);
 }
 
-.skills-page {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 40px 20px;
+.skills-page h1 {
+  margin-bottom: 10px;
+  color: #d97706;
+  font-weight: 700;
+  text-align: center;
 }
 
 .skills-page__info {
   margin-bottom: 30px;
+  color: #785b3a;
   font-size: 18px;
+  text-align: center;
 }
 
 .skills-list {
@@ -190,6 +192,7 @@ P {
   flex-direction: column;
   gap: 12px;
 }
+
 .skills-category {
   margin-bottom: 30px;
 }
@@ -197,12 +200,15 @@ P {
 .skills-category h2 {
   margin-bottom: 15px;
   color: #222222;
+  font-weight: 700;
 }
+
 .skill {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 16px;
+  margin-bottom: 12px;
   background: #ffffff;
   border: 2px solid transparent;
   border-radius: 12px;
@@ -222,15 +228,48 @@ P {
   border-color: #f59e0b;
 }
 
-.skill input {
+.skill .form-check-input {
   width: 18px;
   height: 18px;
-  accent-color: #f59e0b;
+  margin: 0;
+  border-color: #f59e0b;
+  cursor: pointer;
+}
+
+.skill .form-check-input:checked {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
 }
 
 .buttons {
   display: flex;
   gap: 12px;
   margin-top: 30px;
+  padding-bottom: 20px;
+}
+
+.btn-warning {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.btn-warning:hover {
+  background-color: #d97706;
+  border-color: #d97706;
+  color: #ffffff;
+}
+
+.btn-outline-warning {
+  border-color: #f59e0b;
+  color: #d97706;
+  font-weight: 600;
+}
+
+.btn-outline-warning:hover {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
 }
 </style>

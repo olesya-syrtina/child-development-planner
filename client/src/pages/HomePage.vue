@@ -29,7 +29,6 @@ const start = () => {
     },
   });
 };
-
 </script>
 
 <template>
@@ -42,23 +41,38 @@ const start = () => {
       </p>
 
       <form @submit.prevent="start">
-        <div class="form-field">
-          <label for="name">Имя ребёнка</label>
+        <div class="mb-3">
+          <label
+            for="name"
+            class="form-label"
+          > Имя ребёнка </label>
 
           <input
             id="name"
             v-model="childName"
             type="text"
+            class="form-control"
             placeholder="Введите имя"
             required
-          />
+          >
         </div>
 
-        <div class="form-field">
-          <label for="age">Возраст ребёнка</label>
+        <div class="mb-4">
+          <label
+            for="age"
+            class="form-label"
+          > Возраст ребёнка </label>
 
-          <select id="age" v-model="childAge" required>
-            <option value="" disabled>
+          <select
+            id="age"
+            v-model="childAge"
+            class="form-select"
+            required
+          >
+            <option
+              value=""
+              disabled
+            >
               Выберите возраст
             </option>
 
@@ -72,7 +86,10 @@ const start = () => {
           </select>
         </div>
 
-        <button type="submit">
+        <button
+          type="submit"
+          class="btn btn-warning w-100 home__button"
+        >
           Продолжить
         </button>
       </form>
@@ -86,6 +103,8 @@ const start = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #fff7d6, #ffe0a3);
 }
 
 .home__content {
@@ -93,38 +112,51 @@ const start = () => {
   max-width: 500px;
   padding: 40px;
   background: #ffffff;
+  border: 2px solid #fcd34d;
   border-radius: 20px;
-  box-shadow: 0 6px 25px rgb(217 119 6 / 12%);
+  box-shadow: 0 8px 30px rgb(217 119 6 / 15%);
+}
+
+.home__content h1 {
+  margin-bottom: 15px;
+  color: #d97706;
+  text-align: center;
+  font-weight: 700;
 }
 
 .home__description {
   margin-bottom: 30px;
   color: #785b3a;
+  text-align: center;
 }
 
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+.form-label {
+  color: #3f2a16;
+  font-weight: 600;
 }
 
-.form-field input,
-.form-field select {
-  padding: 12px;
+.form-control,
+.form-select {
   border: 2px solid #fcd34d;
-  border-radius: 10px;
-  background: #fffdf5;
+  background-color: #fffdf5;
 }
 
-.form-field input:focus,
-.form-field select:focus {
-  outline: none;
+.form-control:focus,
+.form-select:focus {
   border-color: #f59e0b;
+  box-shadow: 0 0 0 0.2rem rgb(245 158 11 / 20%);
 }
 
-.home button {
-  width: 100%;
-  margin-top: 10px;
+.home__button {
+  padding: 12px;
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.home__button:hover {
+  background-color: #d97706;
+  border-color: #d97706;
 }
 </style>

@@ -6,7 +6,7 @@ import PlanPage from "../pages/PlanPage.vue";
 const router = createRouter({
   history: createWebHistory(),
 
-   routes: [
+  routes: [
     {
       path: "/",
       name: "home",

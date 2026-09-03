@@ -23,7 +23,9 @@ button {
   color: white;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s;
 }
 
 button:hover {
@@ -35,7 +37,6 @@ button:active {
 }
 
 main {
-  max-width: 800px;
   margin: 0 auto;
   padding: 40px 20px;
 }
