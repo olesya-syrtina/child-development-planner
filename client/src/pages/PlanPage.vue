@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import ExerciseCard from "../components/ExerciseCard.vue";
 
 interface Skill {
   id: number;
@@ -28,7 +29,7 @@ const childId = route.query.childId as string;
 
 const selectedSkills = ref<number[]>([]);
 
-fetch(`http://localhost:3000/api/children/${childId}`)
+fetch(`${import.meta.env.VITE_API_URL}/api/children/${childId}`)
   .then((response) => {
     if (!response.ok) {
       throw new Error("Не удалось получить данные ребёнка");
@@ -78,7 +79,7 @@ const goBack = () => {
   });
 };
 
-fetch("http://localhost:3000/api/skills")
+fetch(`${import.meta.env.VITE_API_URL}/api/skills`)
   .then((response) => response.json())
   .then((data) => {
     skills.value = data;
@@ -88,7 +89,7 @@ fetch("http://localhost:3000/api/skills")
   });
 
 onMounted(() => {
-  fetch("http://localhost:3000/api/exercises")
+  fetch(`${import.meta.env.VITE_API_URL}/api/exercises`)
     .then((response) => response.json())
     .then((data) => {
       exercises.value = data;
@@ -124,28 +125,13 @@ onMounted(() => {
             {{ category }}
           </h2>
 
-          <div
+          <ExerciseCard
             v-for="item in plan.filter(
               (item) => item.skill.category === category,
             )"
             :key="item.skill.id"
-            class="card exercise-card mb-3"
-          >
-            <div class="card-body">
-              <div
-                v-for="exercise in item.exercises"
-                :key="exercise.id"
-              >
-                <h4 class="card-title">
-                  Упражнение: "{{ exercise.title }}"
-                </h4>
-
-                <p class="card-text">
-                  {{ exercise.description }}
-                </p>
-              </div>
-            </div>
-          </div>
+            :exercises="item.exercises"
+          />
         </div>
       </section>
 
@@ -181,27 +167,6 @@ onMounted(() => {
   margin-bottom: 15px;
   color: #222222;
   font-weight: 700;
-}
-
-.exercise-card {
-  border: 2px solid #fcd34d;
-  border-left: 5px solid #f59e0b;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 3px 10px rgb(217 119 6 / 10%);
-}
-
-.exercise-card .card-title {
-  margin-bottom: 10px;
-  color: #d97706;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.exercise-card .card-text {
-  margin-bottom: 0;
-  color: #785b3a;
-  line-height: 1.6;
 }
 
 .btn-warning {

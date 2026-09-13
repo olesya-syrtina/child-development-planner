@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import SkillsList from "../components/SkillsList.vue";
 
 interface Skill {
   id: number;
@@ -21,7 +22,7 @@ const skills = ref<Skill[]>([]);
 const selectedSkills = ref<number[]>([]);
 
 if (childId) {
-  fetch(`http://localhost:3000/api/children/${childId}`)
+  fetch(`${import.meta.env.VITE_API_URL}/api/children/${childId}`)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Не удалось получить данные ребёнка");
@@ -54,9 +55,9 @@ const toggleSkill = (skillId: number) => {
 };
 
 const createPlan = () => {
-  const url = childId
-    ? `http://localhost:3000/api/children/${childId}`
-    : "http://localhost:3000/api/children";
+   const url = childId
+    ? `${import.meta.env.VITE_API_URL}/api/children/${childId}`
+    : `${import.meta.env.VITE_API_URL}/api/children`;
 
   const method = childId ? "PUT" : "POST";
 
@@ -99,7 +100,7 @@ const goBack = () => {
   });
 };
 
-fetch("http://localhost:3000/api/skills")
+fetch(`${import.meta.env.VITE_API_URL}/api/skills`)
   .then((response) => response.json())
   .then((data) => {
     skills.value = data;
@@ -118,34 +119,12 @@ fetch("http://localhost:3000/api/skills")
         {{ childName }}, {{ childAge }}
       </p>
 
-      <section class="skills-list">
-        <div
-          v-for="category in categories"
-          :key="category"
-          class="skills-category"
-        >
-          <h2>{{ category }}</h2>
-
-          <label
-            v-for="skill in ageSkills.filter(
-              (skill) => skill.category === category,
-            )"
-            :key="skill.id"
-            class="skill"
-            :class="{ selected: selectedSkills.includes(skill.id) }"
-          >
-            <input
-              type="checkbox"
-              class="form-check-input"
-              :checked="selectedSkills.includes(skill.id)"
-              @change="toggleSkill(skill.id)"
-            >
-
-            <span>{{ skill.title }}</span>
-          </label>
-        </div>
-      </section>
-
+      <SkillsList
+        :categories="categories"
+        :skills="ageSkills"
+        :selected-skills="selectedSkills"
+        @toggle="toggleSkill"
+      />
       <div class="buttons">
         <button
           type="button"
@@ -185,60 +164,6 @@ fetch("http://localhost:3000/api/skills")
   color: #785b3a;
   font-size: 18px;
   text-align: center;
-}
-
-.skills-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.skills-category {
-  margin-bottom: 30px;
-}
-
-.skills-category h2 {
-  margin-bottom: 15px;
-  color: #222222;
-  font-weight: 700;
-}
-
-.skill {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  background: #ffffff;
-  border: 2px solid transparent;
-  border-radius: 12px;
-  cursor: pointer;
-  transition:
-    background-color 0.2s,
-    border-color 0.2s;
-}
-
-.skill:hover {
-  background-color: #fffbeb;
-  border-color: #fcd34d;
-}
-
-.skill.selected {
-  background-color: #fef3c7;
-  border-color: #f59e0b;
-}
-
-.skill .form-check-input {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  border-color: #f59e0b;
-  cursor: pointer;
-}
-
-.skill .form-check-input:checked {
-  background-color: #f59e0b;
-  border-color: #f59e0b;
 }
 
 .buttons {
