@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Child {
+  id             Int    @id @default(autoincrement())
+  name           String @db.VarChar(100)
+  age            String @db.VarChar(50)
+  selectedSkills Int[]  @map("selected_skills")
+
+  @@map("children")
+}
+
+model Skill {
+  id        Int    @id
+  category  String @db.VarChar(100)
+  title     String @db.VarChar(255)
+  ageGroup  String @map("age_group") @db.VarChar(50)
+
+  @@map("skills")
+}
+
+model Exercise {
+  id          Int    @id
+  skillId     Int    @map("skill_id")
+  title       String @db.VarChar(255)
+  description String
+
+  @@map("exercises")
+}
